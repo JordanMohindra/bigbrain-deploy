@@ -197,3 +197,77 @@ const EditGame = () => {
     } else {
       updatedAnswers[index] = { ...updatedAnswers[index], [field]: value }
     }
+
+    setNewQuestion({
+      ...newQuestion,
+      answers: updatedAnswers,
+    })
+  }
+
+  const handleQuestionTypeChange = (type) => {
+    let updatedAnswers = [...newQuestion.answers]
+
+    if (type === "judgment") {
+      // Judgment questions have only one answer
+      updatedAnswers = [{ text: "", isCorrect: false }]
+    } else if (type === "single" && newQuestion.type !== "single") {
+      // For single choice, ensure only one answer is correct
+      const correctIndex = updatedAnswers.findIndex((a) => a.isCorrect)
+      updatedAnswers = updatedAnswers.map((answer, i) => ({
+        ...answer,
+        isCorrect: i === (correctIndex >= 0 ? correctIndex : 0),
+      }))
+    }
+
+    setNewQuestion({
+      ...newQuestion,
+      type,
+      answers: updatedAnswers,
+    })
+  }
+
+  if (loading) {
+    return <LoadingIndicator message="Loading game..." />
+  }
+
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex items-center gap-2">
+          <h1 className="text-3xl font-bold">Edit Game</h1>
+        </div>
+        <button onClick={handleSaveGame} disabled={saving} className="btn btn-primary">
+          {saving ? "Saving..." : "Save Game"}
+        </button>
+      </div>
+
+      <GameDetailsForm
+        gameName={gameName}
+        setGameName={setGameName}
+        thumbnail={thumbnail}
+        setThumbnail={setThumbnail}
+      />
+
+      <QuestionList
+        questions={questions}
+        gameId={gameId}
+        onDeleteQuestion={handleDeleteQuestion}
+        onAddQuestion={() => setShowAddQuestionModal(true)}
+      />
+
+      <AddQuestionModal
+        showModal={showAddQuestionModal}
+        newQuestion={newQuestion}
+        setNewQuestion={setNewQuestion}
+        onCancel={() => setShowAddQuestionModal(false)}
+        onAddQuestion={handleAddQuestion}
+        onAddAnswer={handleAddAnswer}
+        onRemoveAnswer={handleRemoveAnswer}
+        onAnswerChange={handleAnswerChange}
+        onQuestionTypeChange={handleQuestionTypeChange}
+      />
+    </div>
+  )
+}
+
+export default EditGame
