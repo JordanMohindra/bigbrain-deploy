@@ -190,3 +190,30 @@ const EditQuestion = () => {
     return <LoadingIndicator message="Loading question..." />
   }
 
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex items-center gap-2">
+          <Link to={`/game/${gameId}`} className="text-primary-600 hover:text-primary-700">
+            &larr; Back to Game
+          </Link>
+          <h1 className="text-3xl font-bold">Edit Question</h1>
+        </div>
+        <button onClick={handleSaveQuestion} disabled={saving} className="btn btn-primary">
+          {saving ? "Saving..." : "Save Question"}
+        </button>
+      </div>
+
+      <QuestionForm
+        question={question}
+        setQuestion={setQuestion}
+        onAddAnswer={handleAddAnswer}
+        onRemoveAnswer={handleRemoveAnswer}
+        onAnswerChange={handleAnswerChange}
+        onQuestionTypeChange={handleQuestionTypeChange}
+      />
+    </div>
+  )
+}
+
+export default EditQuestion
