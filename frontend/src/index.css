@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 98%;
+  --foreground: 222.2 84% 4.9%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+
+  --primary: 221.2 83.2% 53.3%;
+  --primary-foreground: 210 40% 98%;
+
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 221.2 83.2% 53.3%;
+
+  --radius: 0.5rem;
+}
+
+.dark {
+  /* Less saturated, slightly lighter black */
+  --background: 222.2 14% 12%;       /* hsl(222,14%,12%) */
+  --foreground: 210 10% 60%; /* darken global text from 96% → 85% lightness */
+
+  /* Cards pop a little from the background */
+  --card: 222.2 14% 20%;            /* hsl(222,14%,20%) */
+  --card-foreground: 210 10% 96%;
+
+  --popover: var(--card);
+  --popover-foreground: var(--card-foreground);
+
+  /* Primary action button: slightly softened */
+  --primary: 217.2 77.4% 59.8%;     /* keep your hue but more contrast */
+  --primary-foreground: 210 10% 96%;
+
+  /* Secondary & muted backgrounds: deep gray */
+  --secondary: 210 5% 30%;          /* hsl(210,5%,30%) */
+  --secondary-foreground: 210 10% 96%;
+
+  --muted: var(--secondary);
+  --muted-foreground: 215 15% 70%;
+
+  /* Accent (hover states, highlights) */
+  --accent: 217.2 15% 25%;          /* hsl(217,15%,25%) */
+  --accent-foreground: 210 10% 96%;
+
+  /* Destructive: a bit brighter red */
+  --destructive: 0 62.8% 50%;       /* hsl(0,63%,50%) */
+  --destructive-foreground: 210 10% 96%;
+
+  /* Borders & inputs */
+  --border: 222.2 14% 20%;
+  --input: var(--border);
+  --ring: 224.3 76.5% 48%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-4 py-2 rounded-md font-medium transition-colors;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80;
+  }
+
+  .btn-outline {
+    @apply border border-input bg-background hover:bg-accent hover:text-accent-foreground;
+  }
+
+  .btn-danger {
+    @apply bg-destructive text-destructive-foreground hover:bg-destructive/90;
+  }
+
+  .input {
+    @apply w-full px-3 py-2 border border-input bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring;
+  }
+
+  .card {
+    @apply bg-card text-card-foreground rounded-lg shadow-md p-6;
+  }
+}
