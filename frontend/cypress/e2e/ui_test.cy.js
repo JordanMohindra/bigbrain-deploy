@@ -155,3 +155,21 @@ describe("Admin User Happy Path", () => {
     cy.contains("Status:").parent().contains("Ended").should("be.visible")
   })
 
+  it("should log out of the application successfully", () => {
+    cy.login(testEmail, testPassword);
+
+    // Click the logout button/link
+    cy.contains("Logout").click()
+
+    // Verify redirect to login page
+    cy.url().should("include", "/login")
+
+    // Verify login form is visible
+    cy.get('input[type="email"]').should("be.visible")
+    cy.get('input[type="password"]').should("be.visible")
+  })
+
+  it("should log back into the application successfully", () => {
+    cy.login(testEmail, testPassword);
+  })
+})
