@@ -37,16 +37,27 @@ export const reset = () => {
 };
 
 // Load state from Redis on startup
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
 const load = async () => {
-  const raw = await redis.get("app:state");
-  if (raw) {
+  for (let attempt = 1; attempt <= 2; attempt++) {
     try {
-      const { admins: a, games: g, sessions: s } = JSON.parse(raw);
-      admins   = a || {};
-      games    = g || {};
-      sessions = s || {};
-    } catch {
-      console.warn("Corrupt Redis state, starting fresh");
+      const raw = await redis.get("app:state");
+      if (raw) {
+        const { admins: a, games: g, sessions: s } = JSON.parse(raw);
+        admins   = a || {};
+        games    = g || {};
+        sessions = s || {};
+      }
+      // success (or nothing to parse) → exit loop
+      break;
+    } catch (err) {
+      if (attempt === 2) {
+        console.error("Failed to load state after retry:", err);
+      } else {
+        console.warn("Load failed, retrying in 1 s...", err);
+        await sleep(1000);
+      }
     }
   }
 };
