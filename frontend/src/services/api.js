@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const API_URL = "http://localhost:5005"
+const API_URL = "https://bigbrain-deploy-wmdm.vercel.app"
 
 // Create axios instance
 const api = axios.create({
