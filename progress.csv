@@ -16,4 +16,4 @@ section,completed
 2.5.3,YES
 2.5.4,YES
 
-FE_DEPLOYED_URL=<YOUR_DEPLOYED_URL>
+FE_DEPLOYED_URL= https://z5418455-bigbrain-fe-deploy.vercel.app
