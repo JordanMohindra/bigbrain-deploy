@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const API_URL = "https://bigbrain-deploy-wmdm.vercel.app"
+const API_URL = "bigbrain-deploy-wmdm-bjd55y0j5.vercel.app"
 
 // Create axios instance
 const api = axios.create({
