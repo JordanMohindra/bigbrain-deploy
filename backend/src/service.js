@@ -39,17 +39,10 @@ export const reset = () => {
 // Load state from Redis on startup
 const load = async () => {
   const raw = await redis.get("app:state");
-  if (raw) {
-    try {
-      const { admins: a, games: g, sessions: s } = JSON.parse(raw);
-      admins   = a || {};
-      games    = g || {};
-      sessions = s || {};
-    } catch {
-      console.warn("raw", raw);
-      console.warn("Corrupt Redis state, starting fresh");
-    }
-  }
+  const { admins: a, games: g, sessions: s } = JSON.parse(raw);
+  admins   = a || {};
+  games    = g || {};
+  sessions = s || {};
 };
 
 // immediately invoke (top‐level await may require an IIFE)
