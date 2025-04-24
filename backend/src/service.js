@@ -1,12 +1,16 @@
 import AsyncLock from "async-lock";
-import fs from "fs";
 import jwt from "jsonwebtoken";
 import { AccessError, InputError } from "./error";
+import { Redis } from "@upstash/redis";
+
+const redis = new Redis({
+  url:  process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
 
 const lock = new AsyncLock();
 
 const JWT_SECRET = "llamallamaduck";
-const DATABASE_FILE = "./database.json";
 
 /***************************************************************
                       State Management
@@ -19,26 +23,9 @@ let sessions = {};
 const sessionTimeouts = {};
 
 const update = (admins, games, sessions) =>
-  new Promise((resolve, reject) => {
-    lock.acquire("saveData", () => {
-      try {
-        fs.writeFileSync(
-          DATABASE_FILE,
-          JSON.stringify(
-            {
-              admins,
-              games,
-              sessions,
-            },
-            null,
-            2
-          )
-        );
-        resolve();
-      } catch {
-        reject(new Error("Writing to database failed"));
-      }
-    });
+  lock.acquire("saveData", async () => {
+    const payload = JSON.stringify({ admins, games, sessions });
+    await redis.set("app:state", payload);
   });
 
 export const save = () => update(admins, games, sessions);
@@ -49,15 +36,23 @@ export const reset = () => {
   sessions = {};
 };
 
-try {
-  const data = JSON.parse(fs.readFileSync(DATABASE_FILE));
-  admins = data.admins;
-  games = data.games;
-  sessions = data.sessions;
-} catch {
-  console.log("WARNING: No database found, create a new one");
-  save();
-}
+// Load state from Redis on startup
+const load = async () => {
+  const raw = await redis.get("app:state");
+  if (raw) {
+    try {
+      const { admins: a, games: g, sessions: s } = JSON.parse(raw);
+      admins   = a || {};
+      games    = g || {};
+      sessions = s || {};
+    } catch {
+      console.warn("Corrupt Redis state, starting fresh");
+    }
+  }
+};
+
+// immediately invoke (top‐level await may require an IIFE)
+load().catch(console.error);
 
 /***************************************************************
                       Helper Functions
