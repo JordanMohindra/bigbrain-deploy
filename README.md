@@ -1,4 +1,4 @@
-# Assessment 4 (ReactJS)
+# Bigbrain Game
 
 Deployed frontend/backend system using Express JS backend and React JS frontend
 
